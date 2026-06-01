@@ -8,7 +8,6 @@ dayjs.extend(utc);
 
 export async function set_job_to_running(job) {
   try {
-    // Fetch the active connection pool right here
     const db = getPool();
     await db.query(`UPDATE jobs SET is_running = True WHERE id = ?;`, [job.id]);
   } catch (err) {

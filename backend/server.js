@@ -1,9 +1,8 @@
-import express from "express";
+
 import { ticker } from "./src/utils/ticker.js";
 import { work } from "./src/cron_worker.js";
-
-const app = express();
-const port = 3000;
+import app from './app.js'
+const port = process.env.port;
 work();
 
 app.get("/", async (req, res) => {

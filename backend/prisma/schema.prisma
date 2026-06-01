@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model jobs {
+  id              Bytes        @id @default(dbgenerated()) @db.Binary(16)
+  name            String       @unique(map: "name") @db.VarChar(100)
+  target_url      String       @db.Text
+  cron_expression String       @db.VarChar(100)
+  status          jobs_status?
+  next_run_time   DateTime     @db.Timestamp(0)
+  created_at      DateTime     @default(now()) @db.Timestamp(0)
+  updated_at      DateTime?    @default(dbgenerated("(utc_timestamp())")) @db.DateTime(0)
+  is_running      Boolean?     @default(false)
+  jobs_logs       jobs_logs[]
+
+  @@index([status, next_run_time], map: "idx_jobs_status_run_time")
+}
+
+model jobs_logs {
+  id                Bytes     @id @default(dbgenerated()) @db.Binary(16)
+  job_id            Bytes?    @db.Binary(16)
+  executed_at       DateTime? @default(now()) @db.Timestamp(0)
+  response_status   String?   @db.Char(3)
+  execution_time_ms Int?      @db.UnsignedInt
+  error_message     String?   @db.VarChar(255)
+  jobs              jobs?     @relation(fields: [job_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "jobs_logs_ibfk_1")
+
+  @@index([job_id], map: "job_id")
+}
+
+enum jobs_status {
+  Active
+  Paused
+  Failing
+  Retired
+}
