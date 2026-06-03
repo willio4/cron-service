@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Nav() {
     return (
-        <div className="h-screen w-55 bg-slate-900 border-r border-slate-800">
+        <div className="h-dvh w-55 bg-slate-900 border-r border-slate-800">
         <div className="h-20 font-bold text-lg flex items-center justify-center">
           <Image
             src="/favicon.ico"

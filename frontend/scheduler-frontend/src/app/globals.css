@@ -31,3 +31,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Target the scrollbar channel (track) */
+::-webkit-scrollbar {
+  width: 8px;               /* Make it thin (default is usually 12px-16px) */
+  height: 8px;              /* Thin height for horizontal scrollbars */
+}
+
+/* Target the track background */
+::-webkit-scrollbar-track {
+  background: #0f172a;      /* Matches Tailwind's bg-slate-900 */
+}
+
+/* Target the draggable handle */
+::-webkit-scrollbar-thumb {
+  background: #334155;      /* Matches Tailwind's slate-700 (subtle contrast) */
+  border-radius: 9999px;    /* Fully rounded pill shape */
+  border: 2px solid #0f172a; /* Creates padding around the thumb */
+}
+
+/* Darken the handle slightly on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;      /* Matches Tailwind's slate-600 */
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
+}

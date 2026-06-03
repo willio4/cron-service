@@ -1,3 +1,4 @@
+'use client';
 export default function JobForm() {
   return (
     <div className="mt-8 bg-slate-900 rounded-xl border border-slate-800 p-6">

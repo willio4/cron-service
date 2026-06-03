@@ -3,7 +3,9 @@ import { v4 as uuidv4, parse as uuidParse } from "uuid";
 
 export async function get_all_endpoints(req, res) {
   try {
-    const data = await prisma.jobs.findMany();
+    const data = await prisma.jobs.findMany({
+      
+    });
     res.status(200).json({ data });
   } catch (err) {
     console.error(err);
