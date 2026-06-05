@@ -19,11 +19,11 @@ export async function insert_log_successfully(job, start, response) {
   try {
     const db = getPool();
     await db.query(
-      `INSERT INTO jobs_logs(id, job_id, executed_at, response_status, execution_time_ms, error_message) VALUES(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?);`,
+      `INSERT INTO jobs_logs(job_id, executed_at, response_status, execution_time_ms, error_message) VALUES(?, ?, ?, ?, ?);`,
       [
         job.id,
         new Date(start),
-        response.status,
+        String(response.status), 
         Date.now() - start,
         HttpStatusCode[response.status] || "OK",
       ],
@@ -39,8 +39,14 @@ export async function insert_log_with_error(job, start, err) {
   try {
     const db = getPool();
     await db.query(
-      `INSERT INTO jobs_logs(id, job_id, executed_at, response_status, execution_time_ms, error_message) VALUES(UUID_TO_BIN(UUID()), ?, ?, ?, ?, ?);`,
-      [job.id, new Date(start), status, Date.now() - start, errorMessage],
+      `INSERT INTO jobs_logs(job_id, executed_at, response_status, execution_time_ms, error_message) VALUES(?, ?, ?, ?, ?);`,
+      [
+        job.id, 
+        new Date(start), 
+        String(status), 
+        Date.now() - start, 
+        errorMessage.substring(0, 255)
+      ],
     );
   } catch (dbErr) {
     console.error("❌ Log insertion failed:", dbErr);

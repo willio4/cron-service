@@ -25,7 +25,10 @@ export function work() {
             const dueJobs = await ticker();
             
             if (dueJobs.length > 0) {
+                console.log(`Found ${dueJobs.length} Jobs`);
                 for (const job of dueJobs) {
+                    console.log(`🚀 Executing Cron Job: "${job.name}"`);
+                    
                     await set_job_to_running(job);
                     
                     let start = Date.now();

@@ -1,9 +1,8 @@
 import Header from "./components/Header";
-import JobForm from "./components/JobForm";
 import Nav from "./components/Navigation";
-import Summary from "./components/Summary";
-import Table from "./components/Table";
 import axios from "axios";
+import Dashboard from "./components/Dashboard";
+import Logs from "./components/Logs";
 
 export default async function Home() {
   const response = await axios.get("http://localhost:3000/api/endpoints");
@@ -15,9 +14,8 @@ export default async function Home() {
       <div className="flex-1">
         <Header />
         <main className="p-8">
-          <Summary allJobs={allJobs}/>
-          <div className="justify-self-center w-full"><JobForm /></div>
-          <Table allJobs={allJobs}/>
+          <Dashboard initialJobs={allJobs} />
+          <Logs />
         </main>
       </div>
     </div>
