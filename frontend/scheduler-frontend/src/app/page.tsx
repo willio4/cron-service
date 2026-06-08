@@ -24,18 +24,18 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function getInitialServerData() {
-      try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
-        setAllJobs(response.data.data || response.data || []);
-      } catch (err) {
-        console.error("Failed to seed layout telemetry constraints", err);
-      } finally {
-        setLoading(false);
-      }
+  async function getInitialServerData() {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints`);
+      setAllJobs(response.data);
+    } catch (err) {
+      console.error("Failed to seed layout telemetry constraints", err);
+    } finally {
+      setLoading(false);
     }
-    getInitialServerData();
-  }, []);
+  }
+  getInitialServerData();
+}, []);
 
   return (
     <div className="h-screen w-screen flex bg-slate-950 text-slate-100 overflow-hidden">
