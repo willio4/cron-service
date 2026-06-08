@@ -1,13 +1,16 @@
-import { getPool } from "../db/db.js";
+import { prisma } from "../db/prisma.js";
 
 export async function ticker() {
   try {
-    const db = getPool();
-    const [rows] = await db.query(
-      `SELECT * FROM jobs WHERE next_run_time <= UTC_TIMESTAMP() AND status = 'Active' AND is_running = False;`,
-    );
-    return rows;
+    const dueJobs = await prisma.jobs.findMany({
+      where: {
+        status: "Active",
+      },
+    });
+
+    return dueJobs;
   } catch (error) {
-    console.error("❌ Error checking cron database:", error);
+    console.error("Database error inside ticker execution payload:", error);
+    throw error;
   }
 }
