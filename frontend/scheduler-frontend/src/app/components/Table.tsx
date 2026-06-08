@@ -32,11 +32,10 @@ export default function Table({
     const nextStatus = currentStatus === "Paused" ? "Active" : "Paused";
 
     try {
-      await axios.patch(`http://localhost:3000/api/endpoints/${jobId}`, {
+      await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints/${jobId}`, {
         status: nextStatus,
       });
 
-      // 🟢 Notify parent to update master array state instantly
       onStatusToggle(jobId, nextStatus);
     } catch (err) {
       alert("Failed to update job status in database." + err);
@@ -47,9 +46,8 @@ export default function Table({
     if (!confirm(`Are you sure you want to retire this cron job?`)) return;
 
     try {
-      await axios.delete(`http://localhost:3000/api/endpoints/${jobId}`);
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints/${jobId}`);
 
-      // 🟢 Notify parent to remove the record from master array state instantly
       onJobDeleted(jobId);
     } catch (err) {
       alert("Failed to delete job from database." + err);

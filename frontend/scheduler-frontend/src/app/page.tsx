@@ -26,7 +26,7 @@ export default function Home() {
   useEffect(() => {
     async function getInitialServerData() {
       try {
-        const response = await axios.get("http://localhost:3000/api/endpoints");
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}`);
         setAllJobs(response.data.data || response.data || []);
       } catch (err) {
         console.error("Failed to seed layout telemetry constraints", err);

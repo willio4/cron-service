@@ -9,6 +9,7 @@ interface GlobalLogEntry {
   execution_time_ms: number;
   response_status: string;
   error_message: string | null;
+  job_id: number
   jobs?: {
     name: string;
   };
@@ -23,7 +24,7 @@ export default function GlobalLogs() {
   async function fetchGlobalTraces(isPolling = false) {
     if (!isPolling) setLoading(true);
     try {
-      const res = await axios.get("http://localhost:3000/api/endpoints/logs/all");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints/logs/all`);
       setLogEntries(res.data.logs || res.data || []);
     } catch (err) {
       console.error("Failed to fetch global trace buffer feed", err);

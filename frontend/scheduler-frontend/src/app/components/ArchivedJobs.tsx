@@ -20,7 +20,7 @@ export default function ArchivedJobs({ allJobs, onStatusToggle }: ArchivedJobsPr
 
   const handleReactivate = async (jobId: number) => {
     try {
-      await axios.patch(`http://localhost:3000/api/endpoints/${jobId}`, {
+      await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints/${jobId}`, {
         status: "Paused",
       });
 

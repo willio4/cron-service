@@ -30,7 +30,7 @@ export default function JobForm({ onJobAdded }: JobFormProps) {
     try {
       const date = new Date().toISOString();
       
-      const response = await axios.post(`http://localhost:3000/api/endpoints`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints`, {
         name: cronName,
         target_url: cronUrl,
         cron_expression: cronExpression,

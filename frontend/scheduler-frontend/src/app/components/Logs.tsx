@@ -31,7 +31,7 @@ export default function Logs({ activeJobId }: LogsProps) {
     async function fetchTraces(isPolling = false) {
       if (!isPolling) setLoading(true); 
       try {
-        const res = await axios.get(`http://localhost:3000/api/endpoints/logs/${activeJobId}`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/endpoints/logs/${activeJobId}`);
         setLogEntries(res.data.logs || res.data || []);
       } catch (err) {
         console.error("Failed to pull system telemetry logs", err);
