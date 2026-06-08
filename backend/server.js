@@ -2,7 +2,7 @@
 import { ticker } from "./src/utils/ticker.js";
 import { work } from "./src/cron_worker.js";
 import app from './app.js'
-const port = process.env.port;
+const port = process.env.PORT;
 work();
 
 app.get("/", async (req, res) => {
