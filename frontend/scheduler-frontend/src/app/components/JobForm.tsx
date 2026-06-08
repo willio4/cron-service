@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -15,61 +16,62 @@ export default function JobForm({ onJobAdded }: JobFormProps) {
 
   function handleName(e: React.ChangeEvent<HTMLInputElement>) {
     setName(e.target.value);
-    console.log(e.target.value);
   }
 
   function handleEndpoint(e: React.ChangeEvent<HTMLInputElement>) {
     setEndpoint(e.target.value);
-    console.log(e.target.value);
   }
 
   function handleCron(e: React.ChangeEvent<HTMLInputElement>) {
     setCron(e.target.value);
-    console.log(e.target.value);
   }
 
   async function handleSubmit(cronName: string, cronUrl: string, cronExpression: string) {
     try {
       const date = new Date().toISOString();
+      
       const response = await axios.post(`http://localhost:3000/api/endpoints`, {
-        name: `${cronName}`,
-        target_url: `${cronUrl}`,
-        cron_expression: `${cronExpression}`,
+        name: cronName,
+        target_url: cronUrl,
+        cron_expression: cronExpression,
         status: "Active",
-        next_run_time: `${date}`,
+        next_run_time: date,
       });
 
       setName("");
       setEndpoint("");
       setCron("");
       
-      // 🟢 Send the server's clean response object straight up to the dashboard state array
-      if (response.data.endpoint) {
-        onJobAdded(response.data.endpoint);
+      const newJobData = response.data.endpoint || response.data.data || response.data;
+      if (newJobData) {
+        onJobAdded(newJobData);
       }
       
-      router.refresh(); // Keeps server component cache completely warm in the background
+      router.refresh(); 
     } catch (err) {
       alert("Cron could not be created: " + err);
     }
   }
 
   return (
-    <div className="mt-8 bg-slate-900 rounded-xl border border-slate-800 p-6">
-      <div className="text-base text-heading font-semibold mb-5 text-center">
+    <div className="mt-8 bg-slate-900 rounded-xl border border-slate-800 p-6 shadow-xl">
+      {/* Fixed heading token lookup rule */}
+      <h3 className="text-base text-white font-semibold mb-6 text-center tracking-tight">
         Register Core Endpoint
-      </div>
+      </h3>
+      
       <form
-        className="flex flex-col space-y-4"
+        className="flex flex-col space-y-5"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(name, endpoint, cron);
         }}
       >
-        <div className="mb-5">
+        {/* Input Block 1: System Identification */}
+        <div className="flex flex-col space-y-1.5">
           <label
             htmlFor="job"
-            className="block mb-1 text-xs font-medium text-slate-400"
+            className="block text-xs font-medium text-slate-400 uppercase tracking-wider"
           >
             Job System Name
           </label>
@@ -78,15 +80,17 @@ export default function JobForm({ onJobAdded }: JobFormProps) {
             id="job"
             value={name}
             onChange={handleName}
-            className="bg-slate-950 border border-slate-800 px-4 py-2 rounded-md w-full"
+            className="bg-slate-950 border border-slate-800 focus:border-slate-700 outline-none px-4 h-10 rounded-lg w-full text-sm text-white placeholder-slate-600 transition-all"
             placeholder="e.g., core-api-heartbeat"
             required
           />
         </div>
-        <div className="mb-5">
+
+        {/* Input Block 2: Network Destination URL */}
+        <div className="flex flex-col space-y-1.5">
           <label
             htmlFor="endpoint"
-            className="block mb-1 text-xs font-medium text-slate-400"
+            className="block text-xs font-medium text-slate-400 uppercase tracking-wider"
           >
             Target Webhook / API URL
           </label>
@@ -95,15 +99,17 @@ export default function JobForm({ onJobAdded }: JobFormProps) {
             id="endpoint"
             value={endpoint}
             onChange={handleEndpoint}
-            className="bg-slate-950 border border-slate-800 px-4 py-2 rounded-md w-full font-mono"
+            className="bg-slate-950 border border-slate-800 focus:border-slate-700 outline-none px-4 h-10 rounded-lg w-full font-mono text-xs text-slate-300 placeholder-slate-600 transition-all"
             placeholder="https://api.domain.com/v1/health"
             required
           />
         </div>
-        <div className="mb-5">
+
+        {/* Input Block 3: Scheduling Ruleset Expression */}
+        <div className="flex flex-col space-y-1.5">
           <label
             htmlFor="cron"
-            className="block mb-1 text-xs font-medium text-slate-400"
+            className="block text-xs font-medium text-slate-400 uppercase tracking-wider"
           >
             Cron Expression Intervals
           </label>
@@ -112,14 +118,16 @@ export default function JobForm({ onJobAdded }: JobFormProps) {
             id="cron"
             value={cron}
             onChange={handleCron}
-            className="bg-slate-950 border border-slate-800 px-4 py-2 rounded-md w-full font-mono"
+            className="bg-slate-950 border border-slate-800 focus:border-slate-700 outline-none px-4 h-10 rounded-lg w-full font-mono text-xs text-slate-300 placeholder-slate-600 transition-all"
             placeholder="*/5 * * * *"
             required
           />
         </div>
+
+        {/* Deploy Action Button */}
         <button
           type="submit"
-          className="w-full h-10 bg-indigo-600 font-semibold text-sm rounded-md"
+          className="w-full h-10 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-sm rounded-lg shadow-md transition-all duration-150 mt-2"
         >
           Deploy Job Configuration
         </button>

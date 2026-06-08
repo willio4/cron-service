@@ -5,7 +5,8 @@ import {
     update_endpoint_by_id,
     create_endpoint,
     delete_endpoint_by_id,
-    get_logs_by_id
+    get_logs_by_id,
+    get_global_logs
 } from '../controllers/endpoints-controller.js'
 
 const router = Router();
@@ -15,6 +16,7 @@ router.post("/api/endpoints", create_endpoint);
 router.get("/api/endpoints/:id", get_endpoint_by_id);
 router.patch("/api/endpoints/:id", update_endpoint_by_id);
 router.delete("/api/endpoints/:id", delete_endpoint_by_id);
+router.get("/api/endpoints/logs/all", get_global_logs);
 router.get("/api/endpoints/logs/:id", get_logs_by_id);
 
 export default router;

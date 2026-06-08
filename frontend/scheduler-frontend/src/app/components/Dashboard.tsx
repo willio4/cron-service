@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Summary from "./Summary";
 import JobForm from "./JobForm";
 import Table from "./Table";
+import Logs from "./Logs";
 
 interface Job {
   id: number;
@@ -18,28 +19,46 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ initialJobs }: DashboardProps) {
-  // 🟢 The central source of truth for your dashboard layout
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
 
-  // Sync state if initialJobs completely changes from server refreshes
   useEffect(() => {
     setJobs(initialJobs);
   }, [initialJobs]);
 
   const handleJobAdded = (newJob: Job) => {
-    // Adds the new cron configuration directly to the top of the UI list instantly
     setJobs((prev) => [newJob, ...prev]);
+  };
+
+  const handleStatusToggle = (jobId: number, nextStatus: "Active" | "Paused") => {
+    setJobs((prevJobs) =>
+      prevJobs.map((job) =>
+        job.id === jobId ? { ...job, status: nextStatus } : job
+      )
+    );
+  };
+
+  const handleJobDeleted = (jobId: number) => {
+    setJobs((prevJobs) => prevJobs.filter((job) => job.id !== jobId));
   };
 
   return (
     <>
       <Summary allJobs={jobs} />
+      
       <div className="justify-self-center w-full">
-        {/* Pass down the state hook trigger to the form */}
         <JobForm onJobAdded={handleJobAdded} />
       </div>
-      {/* Feed the connected state array directly to your table layout */}
-      <Table allJobs={jobs} />
+      
+      <Table 
+        allJobs={jobs} 
+        onSelectJob={setSelectedJobId} 
+        selectedJobId={selectedJobId} 
+        onStatusToggle={handleStatusToggle}
+        onJobDeleted={handleJobDeleted}
+      />
+      
+      <Logs activeJobId={selectedJobId} />
     </>
   );
 }

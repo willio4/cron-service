@@ -3,14 +3,9 @@ import { prisma } from "../db/prisma.js";
 export async function get_all_endpoints(req, res) {
   try {
     const data = await prisma.jobs.findMany({
-      where: {
-        NOT: {
-          status: "Retired"
-        }
-      },
       orderBy: {
-        created_at: "desc"
-      }
+        created_at: "desc",
+      },
     });
     res.status(200).json({ data });
   } catch (err) {
@@ -115,9 +110,7 @@ export async function get_logs_by_id(req, res) {
     });
 
     if (!jobWithLogs) {
-      return res
-        .status(404)
-        .json({ error: `Job with ID '${id}' not found` });
+      return res.status(404).json({ error: `Job with ID '${id}' not found` });
     }
 
     res.status(200).json({
@@ -128,5 +121,31 @@ export async function get_logs_by_id(req, res) {
   } catch (err) {
     console.error(`Error fetching logs for job ID ${req.params.id}:`, err);
     res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+export async function get_global_logs(req, res) {
+  try {
+    const globalLogs = await prisma.jobs_logs.findMany({
+      take: 50,
+      orderBy: { 
+        executed_at: "desc" 
+      },
+      include: { 
+        jobs: true 
+      }, 
+    });
+
+    return res.status(200).json({ 
+      success: true,
+      logs: globalLogs 
+    });
+
+  } catch (err) {
+    console.error("Database query crash compiling global telemetry logs:", err);
+    return res.status(500).json({ 
+      success: false, 
+      error: "Internal Server Error compiling cluster trace buffers." 
+    });
   }
 }
