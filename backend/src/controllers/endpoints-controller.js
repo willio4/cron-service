@@ -7,7 +7,8 @@ export async function get_all_endpoints(req, res) {
         created_at: "desc",
       },
     });
-    res.status(200).json({ data });
+    
+    res.status(200).json(data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -22,9 +23,7 @@ export async function create_endpoint(req, res) {
       data: jobData,
     });
 
-    res.status(201).json({
-      endpoint: newJob,
-    });
+    res.status(201).json(newJob);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -43,7 +42,7 @@ export async function get_endpoint_by_id(req, res) {
       return res.status(404).json({ error: "Endpoint not found" });
     }
 
-    res.status(200).json({ endpoint: result });
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -60,7 +59,7 @@ export async function update_endpoint_by_id(req, res) {
       data: updatedData,
     });
 
-    res.status(200).json({ endpoint: result });
+   res.status(200).json(result);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
@@ -76,9 +75,7 @@ export async function delete_endpoint_by_id(req, res) {
       data: { status: "Retired" },
     });
 
-    res
-      .status(200)
-      .json({ message: "Job retired successfully", job: retiredJob });
+    res.status(200).json(retiredJob);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
