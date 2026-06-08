@@ -4,16 +4,12 @@ import cors from 'cors';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:3000', process.env.FRONTEND_URL];
+const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Blocked by CORS platform security policy.'));
-    }
-  },
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
